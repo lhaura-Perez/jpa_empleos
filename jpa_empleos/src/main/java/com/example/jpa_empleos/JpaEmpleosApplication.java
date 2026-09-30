@@ -1,5 +1,6 @@
 package com.example.jpa_empleos;
 
+import com.example.jpa_empleos.models.Categoria;
 import com.example.jpa_empleos.repository.CategoriasRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -10,6 +11,7 @@ public class JpaEmpleosApplication implements CommandLineRunner {
 
 	private final CategoriasRepository categoriasRepo;
 
+	// Inyección de dependencias por constructor
 	public JpaEmpleosApplication(CategoriasRepository categoriasRepo) {
 		this.categoriasRepo = categoriasRepo;
 	}
@@ -21,12 +23,16 @@ public class JpaEmpleosApplication implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception {
 		guardar();
-		eliminar();
-		System.out.println(categoriasRepo);
 	}
 
 	private void guardar() {
-		System.out.println("guardando");
+		System.out.println("Guardando...");
+		Categoria nuevaCategoria = new Categoria();
+		nuevaCategoria.setNombre("Finanzas");
+		nuevaCategoria.setDescripcion("Trabajos relacionados con finanzas y contabilidad");
+
+		categoriasRepo.save(nuevaCategoria);
+		System.out.println(nuevaCategoria);
 	}
 
 	private void eliminar() {
