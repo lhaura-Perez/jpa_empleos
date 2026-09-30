@@ -6,12 +6,13 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import java.util.Optional;
+
 @SpringBootApplication
 public class JpaEmpleosApplication implements CommandLineRunner {
 
 	private final CategoriasRepository categoriasRepo;
 
-	// Inyección de dependencias por constructor
 	public JpaEmpleosApplication(CategoriasRepository categoriasRepo) {
 		this.categoriasRepo = categoriasRepo;
 	}
@@ -22,9 +23,24 @@ public class JpaEmpleosApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-		guardar();
+		buscarPorId();
 	}
 
+	/**
+	 * Método findById Interfaz CrudRepository
+	 */
+	private void buscarPorId() {
+		Optional<Categoria> categoriaBuscada = categoriasRepo.findById(1);
+		if (categoriaBuscada.isPresent()) {
+			System.out.println(categoriaBuscada.get());
+		} else {
+			System.out.println("Categoría no encontrada");
+		}
+	}
+
+	/**
+	 * Método save Interfaz CrudRepository
+	 */
 	private void guardar() {
 		System.out.println("Guardando...");
 		Categoria nuevaCategoria = new Categoria();
