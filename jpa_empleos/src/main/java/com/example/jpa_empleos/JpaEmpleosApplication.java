@@ -23,7 +23,7 @@ public class JpaEmpleosApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-		eliminar();
+		// Método vacío para permitir uso mediante API REST / Postman
 	}
 
 	/**
