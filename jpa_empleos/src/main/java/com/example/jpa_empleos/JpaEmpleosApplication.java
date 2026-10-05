@@ -23,7 +23,8 @@ public class JpaEmpleosApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-		// Método vacío para permitir uso mediante API REST / Postman
+		// Puedes descomentar el método que desees probar al arrancar la aplicación
+		// guardar();
 	}
 
 	/**
