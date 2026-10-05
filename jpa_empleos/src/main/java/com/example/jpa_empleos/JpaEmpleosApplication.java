@@ -65,7 +65,6 @@ public class JpaEmpleosApplication implements CommandLineRunner {
 		}
 	}
 
-
 	/**
 	 * Método save Interfaz CrudRepository
 	 */
