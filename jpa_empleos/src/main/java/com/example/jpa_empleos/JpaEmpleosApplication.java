@@ -41,71 +41,21 @@ public class JpaEmpleosApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        // 1. Crear perfiles iniciales en la BD (ejecutar una vez o validar)
-        crearPerfiles();
-
-        // 2. Crear un usuario de prueba con perfiles asignados
-        crearUsuarioConPerfiles();
-
-        // 3. Buscar el usuario creado
+        // Ejecutamos el método para buscar al usuario con ID = 1
         buscarUsuario();
     }
 
-    private void crearPerfiles() {
-        if (perfilesRepo.count() == 0) {
-            perfilesRepo.saveAll(obtenerPerfiles());
-            System.out.println("¡Perfiles creados con éxito!");
-        }
-    }
-
-    private List<Perfil> obtenerPerfiles() {
-        List<Perfil> perfiles = new LinkedList<>();
-        Perfil perfil1 = new Perfil();
-        perfil1.setPerfil("SUPERVISOR");
-        Perfil perfil2 = new Perfil();
-        perfil2.setPerfil("ADMINISTRADOR");
-        Perfil perfil3 = new Perfil();
-        perfil3.setPerfil("USUARIO");
-        perfiles.add(perfil1);
-        perfiles.add(perfil2);
-        perfiles.add(perfil3);
-        return perfiles;
-    }
-
-    private void crearUsuarioConPerfiles() {
-        // Evitar duplicar si ya existe el usuario
-        if (usuarioRepo.count() == 0) {
-            Usuario nuevoUsuario = new Usuario();
-            nuevoUsuario.setNombre("José García");
-            nuevoUsuario.setEmail("jose@gmail.com");
-            nuevoUsuario.setUsername("joseg");
-            nuevoUsuario.setPassword("12345");
-            nuevoUsuario.setEstatus(1);
-            nuevoUsuario.setFechaRegistro(LocalDate.now());
-
-            Perfil perfil1 = new Perfil();
-            perfil1.setId(2); // ADMINISTRADOR
-            Perfil perfil2 = new Perfil();
-            perfil2.setId(3); // USUARIO
-
-            Set<Perfil> perfilesUsuario = new HashSet<>();
-            perfilesUsuario.add(perfil1);
-            perfilesUsuario.add(perfil2);
-            nuevoUsuario.setPerfiles(perfilesUsuario);
-
-            usuarioRepo.save(nuevoUsuario);
-            System.out.println("¡Usuario con perfiles creado con éxito!");
-        }
-    }
-
-    private void buscarUsuario() {
+    /**
+     * Método para buscar un usuario y sus perfiles asociados
+     */
+    public void buscarUsuario() {
         Optional<Usuario> usuarioOptional = usuarioRepo.findById(1);
         if (usuarioOptional.isPresent()) {
             Usuario usuario = usuarioOptional.get();
             System.out.println("Nombre: " + usuario.getNombre());
-            System.out.println("Perfiles asignados:");
+            System.out.println("Perfiles asignados");
             for (Perfil perfil : usuario.getPerfiles()) {
-                System.out.println("- " + perfil.getPerfil());
+                System.out.println(perfil.getPerfil());
             }
         }
     }
