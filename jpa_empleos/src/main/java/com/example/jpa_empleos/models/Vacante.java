@@ -1,48 +1,119 @@
 package com.example.jpa_empleos.models;
 
-import jakarta.persistence.*;
-import lombok.*;
 import java.util.Date;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "Vacantes")
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
+@Table(name = "vacantes")
 public class Vacante {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "nombre", nullable = false, length = 200)
     private String nombre;
-
-    @Column(name = "descripcion", nullable = false, columnDefinition = "text")
     private String descripcion;
-
-    @Column(name = "fecha", nullable = false)
     private Date fecha;
-
-    @Column(name = "salario", nullable = false)
     private Double salario;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "estatus", nullable = false)
-    private EstatusVacante estatus;
-
-    @Column(name = "destacado", nullable = false)
-    private Integer destacado;
-
-    @Column(name = "imagen", nullable = false, length = 250)
+    private Integer estatus;
+    private String destacado;
+    private String detalles;
     private String imagen;
 
-    @Column(name = "detalles", columnDefinition = "text")
-    private String detalles;
-
+    // Relación ManyToOne con Categoria (coincide con el mappedBy = "categoria")
     @ManyToOne
-    @JoinColumn(name = "idCategoria")
+    @JoinColumn(name = "id_categoria")
     private Categoria categoria;
+
+    // Getters y Setters
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
+
+    public Date getFecha() {
+        return fecha;
+    }
+
+    public void setFecha(Date fecha) {
+        this.fecha = fecha;
+    }
+
+    public Double getSalario() {
+        return salario;
+    }
+
+    public void setSalario(Double salario) {
+        this.salario = salario;
+    }
+
+    public Integer getEstatus() {
+        return estatus;
+    }
+
+    public void setEstatus(Integer estatus) {
+        this.estatus = estatus;
+    }
+
+    public String getDestacado() {
+        return destacado;
+    }
+
+    public void setDestacado(String destacado) {
+        this.destacado = destacado;
+    }
+
+    public String getDetalles() {
+        return detalles;
+    }
+
+    public void setDetalles(String detalles) {
+        this.detalles = detalles;
+    }
+
+    public String getImagen() {
+        return imagen;
+    }
+
+    public void setImagen(String imagen) {
+        this.imagen = imagen;
+    }
+
+    public Categoria getCategoria() {
+        return categoria;
+    }
+
+    public void setCategoria(Categoria categoria) {
+        this.categoria = categoria;
+    }
+
+    @Override
+    public String toString() {
+        return "Vacante [id=" + id + ", nombre=" + nombre + ", salario=" + salario + "]";
+    }
 }
