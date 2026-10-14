@@ -1,6 +1,7 @@
 package com.example.jpa_empleos.models;
 
 import java.util.List;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -21,6 +22,7 @@ public class Categoria {
 
     // Relación OneToMany con Vacante (mappedBy apunta al atributo 'categoria' en Vacante)
     @OneToMany(mappedBy = "categoria")
+    @JsonIgnore // Evita el bucle infinito de serialización en JSON
     private List<Vacante> vacantes;
 
     // Getters y Setters

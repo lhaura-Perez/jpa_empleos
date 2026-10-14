@@ -1,6 +1,7 @@
 package com.example.jpa_empleos.models;
 
 import java.util.Date;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -8,9 +9,12 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
 
 @Entity
 @Table(name = "vacantes")
+@JsonPropertyOrder({ "id", "nombre", "descripcion", "fecha", "salario", "estatus", "destacado", "imagen", "detalles", "categoria" })
 public class Vacante {
 
     @Id
@@ -19,16 +23,19 @@ public class Vacante {
 
     private String nombre;
     private String descripcion;
+
+    @Temporal(TemporalType.DATE)
     private Date fecha;
+
     private Double salario;
     private Integer estatus;
     private String destacado;
-    private String detalles;
     private String imagen;
+    private String detalles;
 
-    // Relación ManyToOne con Categoria (coincide con el mappedBy = "categoria")
+    // Relación ManyToOne con Categoria (FK: idCategoria)
     @ManyToOne
-    @JoinColumn(name = "id_categoria")
+    @JoinColumn(name = "idCategoria")
     private Categoria categoria;
 
     // Getters y Setters
@@ -88,20 +95,20 @@ public class Vacante {
         this.destacado = destacado;
     }
 
-    public String getDetalles() {
-        return detalles;
-    }
-
-    public void setDetalles(String detalles) {
-        this.detalles = detalles;
-    }
-
     public String getImagen() {
         return imagen;
     }
 
     public void setImagen(String imagen) {
         this.imagen = imagen;
+    }
+
+    public String getDetalles() {
+        return detalles;
+    }
+
+    public void setDetalles(String detalles) {
+        this.detalles = detalles;
     }
 
     public Categoria getCategoria() {
