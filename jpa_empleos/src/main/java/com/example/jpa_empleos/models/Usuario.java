@@ -7,10 +7,12 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "Usuarios", uniqueConstraints = {
-        @UniqueConstraint(columnNames = "username"),
-        @UniqueConstraint(columnNames = "email")
-})
+@Table(name = "Usuarios",
+        uniqueConstraints = {
+                @UniqueConstraint(columnNames = "username"),
+                @UniqueConstraint(columnNames = "email")
+        }
+)
 @Getter
 @Setter
 @NoArgsConstructor
@@ -40,6 +42,7 @@ public class Usuario {
     @Column(name = "fechaRegistro")
     private LocalDate fechaRegistro;
 
+    // Relación ManyToMany con Perfiles usando la tabla UsuarioPerfil
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "UsuarioPerfil",
