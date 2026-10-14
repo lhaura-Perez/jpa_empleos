@@ -1,13 +1,8 @@
 package com.example.jpa_empleos.models;
 
-import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "categorias")
@@ -18,48 +13,24 @@ public class Categoria {
     private Integer id;
 
     private String nombre;
+
     private String descripcion;
 
-    // Relación OneToMany con Vacante (mappedBy apunta al atributo 'categoria' en Vacante)
+    // Anotación clave para cortar la recursión infinita en el JSON
+    @JsonIgnore
     @OneToMany(mappedBy = "categoria")
-    @JsonIgnore // Evita el bucle infinito de serialización en JSON
     private List<Vacante> vacantes;
 
     // Getters y Setters
-    public Integer getId() {
-        return id;
-    }
+    public Integer getId() { return id; }
+    public void setId(Integer id) { this.id = id; }
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+    public String getNombre() { return nombre; }
+    public void setNombre(String nombre) { this.nombre = nombre; }
 
-    public String getNombre() {
-        return nombre;
-    }
+    public String getDescripcion() { return descripcion; }
+    public void setDescripcion(String descripcion) { this.descripcion = descripcion; }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public String getDescripcion() {
-        return descripcion;
-    }
-
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
-    }
-
-    public List<Vacante> getVacantes() {
-        return vacantes;
-    }
-
-    public void setVacantes(List<Vacante> vacantes) {
-        this.vacantes = vacantes;
-    }
-
-    @Override
-    public String toString() {
-        return "Categoria [id=" + id + ", nombre=" + nombre + "]";
-    }
+    public List<Vacante> getVacantes() { return vacantes; }
+    public void setVacantes(List<Vacante> vacantes) { this.vacantes = vacantes; }
 }

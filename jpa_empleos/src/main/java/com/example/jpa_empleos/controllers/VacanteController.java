@@ -1,32 +1,42 @@
-package com.example.jpa_empleos.controllers;
+package com.example.jpa_empleos.controller;
 
-import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
+import com.example.jpa_empleos.models.EstatusVacante;
 import com.example.jpa_empleos.models.Vacante;
 import com.example.jpa_empleos.repository.VacantesRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/jpa-vacante")
 public class VacanteController {
 
     @Autowired
     private VacantesRepository vacantesRepo;
 
-    // Endpoint GET para buscar todas las vacantes
-    @GetMapping("/jpa-vacante")
-    public List<Vacante> buscarVacantes() {
-        return vacantesRepo.findAll();
+    @GetMapping("/estatus")
+    public List<Vacante> buscarPorEstatus(@RequestParam("estatus") EstatusVacante estatus) {
+        return vacantesRepo.findByEstatus(estatus);
     }
 
-    // Endpoint POST para guardar una nueva vacante
-    @PostMapping("/jpa-vacante")
-    public Vacante guardarVacante(@RequestBody Vacante vacante) {
-        return vacantesRepo.save(vacante);
+    @GetMapping("/estatus-varios")
+    public List<Vacante> buscarPorVariosEstatus(@RequestParam("estatus") EstatusVacante[] estatus) {
+        return vacantesRepo.findByEstatusIn(estatus);
+    }
+
+    @GetMapping("/salario")
+    public List<Vacante> buscarPorSalario(@RequestParam("minimo") Double minimo, @RequestParam("maximo") Double maximo) {
+        return vacantesRepo.findBySalarioBetween(minimo, maximo);
+    }
+
+    @GetMapping("/salario/desc")
+    public List<Vacante> buscarPorSalarioDesc(@RequestParam("minimo") Double minimo, @RequestParam("maximo") Double maximo) {
+        return vacantesRepo.findBySalarioBetweenOrderBySalarioDesc(minimo, maximo);
+    }
+
+    @GetMapping("/destacadas")
+    public List<Vacante> buscarDestacadasEstatus(@RequestParam("destacado") int destacado, @RequestParam("estatus") EstatusVacante estatus) {
+        return vacantesRepo.findByDestacadoAndEstatusOrderByIdDesc(destacado, estatus);
     }
 }

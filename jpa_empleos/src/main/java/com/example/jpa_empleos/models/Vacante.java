@@ -1,20 +1,22 @@
 package com.example.jpa_empleos.models;
 
-import java.util.Date;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "vacantes")
-@JsonPropertyOrder({ "id", "nombre", "descripcion", "fecha", "salario", "estatus", "destacado", "imagen", "detalles", "categoria" })
+@JsonPropertyOrder({
+        "id",
+        "nombre",
+        "descripcion",
+        "fecha",
+        "salario",
+        "estatus",
+        "destacado",
+        "imagen",
+        "detalles"
+})
 public class Vacante {
 
     @Id
@@ -22,105 +24,55 @@ public class Vacante {
     private Integer id;
 
     private String nombre;
+
     private String descripcion;
 
-    @Temporal(TemporalType.DATE)
-    private Date fecha;
+    private String fecha;
+
+    @Enumerated(EnumType.STRING)
+    private EstatusVacante estatus;
 
     private Double salario;
-    private Integer estatus;
-    private String destacado;
+
+    private Integer destacado;
+
     private String imagen;
+
     private String detalles;
 
-    // Relación ManyToOne con Categoria (FK: idCategoria)
+    @JsonIgnore
     @ManyToOne
-    @JoinColumn(name = "idCategoria")
+    @JoinColumn(name = "id_categoria")
     private Categoria categoria;
 
     // Getters y Setters
-    public Integer getId() {
-        return id;
-    }
+    public Integer getId() { return id; }
+    public void setId(Integer id) { this.id = id; }
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+    public String getNombre() { return nombre; }
+    public void setNombre(String nombre) { this.nombre = nombre; }
 
-    public String getNombre() {
-        return nombre;
-    }
+    public String getDescripcion() { return descripcion; }
+    public void setDescripcion(String descripcion) { this.descripcion = descripcion; }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
+    public String getFecha() { return fecha; }
+    public void setFecha(String fecha) { this.fecha = fecha; }
 
-    public String getDescripcion() {
-        return descripcion;
-    }
+    public EstatusVacante getEstatus() { return estatus; }
+    public void setEstatus(EstatusVacante estatus) { this.estatus = estatus; }
 
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
-    }
+    public Double getSalario() { return salario; }
+    public void setSalario(Double salario) { this.salario = salario; }
 
-    public Date getFecha() {
-        return fecha;
-    }
+    public Integer getDestacado() { return destacado; }
+    public void setDestacado(Integer destacado) { this.destacado = destacado; }
 
-    public void setFecha(Date fecha) {
-        this.fecha = fecha;
-    }
+    public String getImagen() { return imagen; }
+    public void setImagen(String imagen) { this.imagen = imagen; }
 
-    public Double getSalario() {
-        return salario;
-    }
+    public String getDetalles() { return detalles; }
+    public void setDetalles(String det) { this.detalles = det; }
 
-    public void setSalario(Double salario) {
-        this.salario = salario;
-    }
-
-    public Integer getEstatus() {
-        return estatus;
-    }
-
-    public void setEstatus(Integer estatus) {
-        this.estatus = estatus;
-    }
-
-    public String getDestacado() {
-        return destacado;
-    }
-
-    public void setDestacado(String destacado) {
-        this.destacado = destacado;
-    }
-
-    public String getImagen() {
-        return imagen;
-    }
-
-    public void setImagen(String imagen) {
-        this.imagen = imagen;
-    }
-
-    public String getDetalles() {
-        return detalles;
-    }
-
-    public void setDetalles(String detalles) {
-        this.detalles = detalles;
-    }
-
-    public Categoria getCategoria() {
-        return categoria;
-    }
-
-    public void setCategoria(Categoria categoria) {
-        this.categoria = categoria;
-    }
-
-    @Override
-    public String toString() {
-        return "Vacante [id=" + id + ", nombre=" + nombre + ", salario=" + salario + "]";
-    }
+    public Categoria getCategoria() { return categoria; }
+    public void setCategoria(Categoria categoria) { this.categoria = categoria; }
 }
