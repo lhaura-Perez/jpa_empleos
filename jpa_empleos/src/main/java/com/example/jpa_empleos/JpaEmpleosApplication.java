@@ -1,16 +1,18 @@
 package com.example.jpa_empleos;
 
-import java.util.Date;
-import java.util.List;
+import com.example.jpa_empleos.models.Perfil;
+import com.example.jpa_empleos.models.Usuario;
+import com.example.jpa_empleos.repository.*;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import com.example.jpa_empleos.models.Categoria;
-import com.example.jpa_empleos.models.Vacante;
-import com.example.jpa_empleos.repository.CategoriasJPARepository;
-import com.example.jpa_empleos.repository.CategoriasRepository;
-import com.example.jpa_empleos.repository.VacantesRepository;
+import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 @SpringBootApplication
 public class JpaEmpleosApplication implements CommandLineRunner {
@@ -18,13 +20,19 @@ public class JpaEmpleosApplication implements CommandLineRunner {
     private final CategoriasRepository categoriasRepo;
     private final CategoriasJPARepository categoriasJPARepo;
     private final VacantesRepository vacantesRepo;
+    private final PerfilesRepository perfilesRepo;
+    private final UsuarioRepository usuarioRepo;
 
     public JpaEmpleosApplication(CategoriasRepository categoriasRepo,
                                  CategoriasJPARepository categoriasJPARepo,
-                                 VacantesRepository vacantesRepo) {
+                                 VacantesRepository vacantesRepo,
+                                 PerfilesRepository perfilesRepo,
+                                 UsuarioRepository usuarioRepo) {
         this.categoriasRepo = categoriasRepo;
         this.categoriasJPARepo = categoriasJPARepo;
         this.vacantesRepo = vacantesRepo;
+        this.perfilesRepo = perfilesRepo;
+        this.usuarioRepo = usuarioRepo;
     }
 
     public static void main(String[] args) {
@@ -33,41 +41,72 @@ public class JpaEmpleosApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        // guardarVacante(); // Comentado para evitar que se inserte automáticamente al iniciar la app
-        buscarVacantes();
+        // 1. Crear perfiles iniciales en la BD (ejecutar una vez o validar)
+        crearPerfiles();
+
+        // 2. Crear un usuario de prueba con perfiles asignados
+        crearUsuarioConPerfiles();
+
+        // 3. Buscar el usuario creado
+        buscarUsuario();
     }
 
-    /**
-     * Guardar una vacante
-     */
-    private void guardarVacante() {
-        Vacante vacante = new Vacante();
-        vacante.setNombre("Desarrollador Java PRO");
-        vacante.setDescripcion("Se busca desarrollador con experiencia en Spring Boot y JPA.");
-        vacante.setFecha(new Date());
-        vacante.setSalario(25000.0);
-        vacante.setEstatus(1);
-        vacante.setDestacado("1");
-        vacante.setImagen("logo_empresa.png");
-        vacante.setDetalles("Trabajo remoto con horario flexible. Beneficios y capacitación incluidos.");
-
-        // Crear una categoría asociada (asociando el ID 1 que ya existe en la BD)
-        Categoria categoria = new Categoria();
-        categoria.setId(1);
-
-        vacante.setCategoria(categoria);
-        vacantesRepo.save(vacante);
-        System.out.println("¡Vacante guardada con éxito!");
+    private void crearPerfiles() {
+        if (perfilesRepo.count() == 0) {
+            perfilesRepo.saveAll(obtenerPerfiles());
+            System.out.println("¡Perfiles creados con éxito!");
+        }
     }
 
-    /**
-     * Método findAll - Interfaz JPARepository con consulta de ambas tablas
-     */
-    private void buscarVacantes() {
-        List<Vacante> vacantes = vacantesRepo.findAll();
-        for (Vacante vacante : vacantes) {
-            System.out.println(vacante.getId() + ". " + vacante.getNombre() +
-                    " -> " + (vacante.getCategoria() != null ? vacante.getCategoria().getNombre() : "Sin categoría"));
+    private List<Perfil> obtenerPerfiles() {
+        List<Perfil> perfiles = new LinkedList<>();
+        Perfil perfil1 = new Perfil();
+        perfil1.setPerfil("SUPERVISOR");
+        Perfil perfil2 = new Perfil();
+        perfil2.setPerfil("ADMINISTRADOR");
+        Perfil perfil3 = new Perfil();
+        perfil3.setPerfil("USUARIO");
+        perfiles.add(perfil1);
+        perfiles.add(perfil2);
+        perfiles.add(perfil3);
+        return perfiles;
+    }
+
+    private void crearUsuarioConPerfiles() {
+        // Evitar duplicar si ya existe el usuario
+        if (usuarioRepo.count() == 0) {
+            Usuario nuevoUsuario = new Usuario();
+            nuevoUsuario.setNombre("José García");
+            nuevoUsuario.setEmail("jose@gmail.com");
+            nuevoUsuario.setUsername("joseg");
+            nuevoUsuario.setPassword("12345");
+            nuevoUsuario.setEstatus(1);
+            nuevoUsuario.setFechaRegistro(LocalDate.now());
+
+            Perfil perfil1 = new Perfil();
+            perfil1.setId(2); // ADMINISTRADOR
+            Perfil perfil2 = new Perfil();
+            perfil2.setId(3); // USUARIO
+
+            Set<Perfil> perfilesUsuario = new HashSet<>();
+            perfilesUsuario.add(perfil1);
+            perfilesUsuario.add(perfil2);
+            nuevoUsuario.setPerfiles(perfilesUsuario);
+
+            usuarioRepo.save(nuevoUsuario);
+            System.out.println("¡Usuario con perfiles creado con éxito!");
+        }
+    }
+
+    private void buscarUsuario() {
+        Optional<Usuario> usuarioOptional = usuarioRepo.findById(1);
+        if (usuarioOptional.isPresent()) {
+            Usuario usuario = usuarioOptional.get();
+            System.out.println("Nombre: " + usuario.getNombre());
+            System.out.println("Perfiles asignados:");
+            for (Perfil perfil : usuario.getPerfiles()) {
+                System.out.println("- " + perfil.getPerfil());
+            }
         }
     }
 }
